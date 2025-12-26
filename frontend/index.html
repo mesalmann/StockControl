@@ -1,510 +1,91 @@
-<!doctype html>
-<html lang="tr" class="h-full">
- <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ürün Stok Takip Sistemi</title>
-  <script src="/_sdk/element_sdk.js"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      box-sizing: border-box;
-    }
-  </style>
-  <style>@view-transition { navigation: auto; }</style>
- </head>
- <body class="h-full">
-  <div id="app" class="w-full h-full bg-gradient-to-br from-indigo-50 to-blue-50 overflow-auto"><!-- Login Screen -->
-   <div id="loginScreen" class="max-w-md mx-auto px-4 flex items-center justify-center min-h-full py-8">
-    <div class="bg-white rounded-lg shadow-xl p-8 w-full">
-     <div class="text-center mb-8">
-      <div class="text-5xl mb-4">
-       📦
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stok Takip Sistemi</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+  <div id="app">
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen">
+      <div class="login-card">
+
+        <div class="text-center">
+          <div style="font-size: 3rem;">📦</div>
+          <h1 class="login-title">Stok Takip Sistemi</h1>
+          <p class="login-sub">Lütfen giriş yapın</p>
+        </div>
+
+        <form id="loginForm">
+          <input type="text" id="employeeId" placeholder="Çalışan ID" required />
+          <input type="text" id="firstName" placeholder="İsim" required />
+          <input type="text" id="lastName" placeholder="Soyisim" required />
+
+          <button class="primary" type="submit">Giriş Yap</button>
+        </form>
+
+        <div id="loginError" class="text-red mt-2 hidden"></div>
       </div>
-      <h1 id="loginTitle" class="text-3xl font-bold text-gray-800 mb-2">Stok Takip Sistemi</h1>
-      <p class="text-gray-600">Lütfen giriş yapın</p>
-     </div>
-     <form id="loginForm" class="space-y-4">
-      <div><label for="employeeId" class="block text-sm font-medium text-gray-700 mb-1">Çalışan ID</label> <input type="text" id="employeeId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Örn: 12345">
-      </div>
-      <div><label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">İsim</label> <input type="text" id="firstName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="İsminiz">
-      </div>
-      <div><label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Soyisim</label> <input type="text" id="lastName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Soyisminiz">
-      </div><button type="submit" class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium text-lg"> Giriş Yap </button>
-     </form>
-     <div id="loginError" class="mt-4 text-sm text-red-600 text-center hidden"></div>
     </div>
-   </div><!-- Main App (Hidden initially) -->
-   <div id="mainApp" class="max-w-7xl mx-auto px-4 py-8 hidden"><!-- Header -->
-    <div class="mb-8 flex justify-between items-start">
-     <div>
-      <h1 id="pageTitle" class="text-4xl font-bold text-gray-800 mb-2">Ürün Stok Takip</h1>
-      <p class="text-gray-600">Ürünlerinizi ekleyin ve stok seviyelerini takip edin</p>
-     </div>
-     <div class="text-right">
-      <div class="text-sm text-gray-600">
-       Hoş geldiniz,
+
+    <!-- MAIN APP -->
+    <div id="mainApp" class="hidden">
+
+      <!-- HEADER -->
+      <div class="header">
+        <div>
+          <h1>Ürün Stok Takip</h1>
+          <p class="text-gray">Ürünlerinizi yönetin</p>
+        </div>
+
+        <div class="text-right">
+          <div id="userName"></div>
+          <button class="secondary mt-1" onclick="logout()">Çıkış Yap</button>
+        </div>
       </div>
-      <div id="userName" class="font-semibold text-gray-800"></div><button onclick="logout()" class="text-sm text-indigo-600 hover:text-indigo-800 mt-1">Çıkış Yap</button>
-     </div>
-    </div><!-- Add Product Form -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-     <h2 class="text-xl font-semibold text-gray-800 mb-4">Yeni Ürün Ekle</h2>
-     <form id="addProductForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div><label for="productName" class="block text-sm font-medium text-gray-700 mb-1">Ürün Adı</label> <input type="text" id="productName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+      <!-- ADD PRODUCT -->
+      <div class="card mt-3">
+        <h2>Yeni Ürün Ekle</h2>
+
+        <form id="addProductForm">
+          <input type="text" id="productName" placeholder="Ürün Adı" required />
+          <input type="text" id="category" placeholder="Kategori" required />
+          <input type="number" id="stockQuantity" placeholder="Stok Miktarı" required />
+          <input type="number" id="minStockLevel" placeholder="Minimum Stok" required />
+
+          <button class="primary" id="addButton">Ürün Ekle</button>
+        </form>
+
+        <div id="addMessage" class="mt-2"></div>
       </div>
-      <div><label for="category" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label> <input type="text" id="category" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+      <!-- STATS -->
+      <div class="card mt-3">
+        <p>Toplam Ürün: <strong id="totalProducts">0</strong></p>
+        <p>Düşük Stok: <strong id="lowStockCount">0</strong></p>
       </div>
-      <div><label for="stockQuantity" class="block text-sm font-medium text-gray-700 mb-1">Stok Miktarı</label> <input type="number" id="stockQuantity" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+
+      <!-- PRODUCT LIST -->
+      <div class="card mt-3">
+        <h2>Ürün Listesi</h2>
+        <div id="productsContainer"></div>
       </div>
-      <div><label for="minStockLevel" class="block text-sm font-medium text-gray-700 mb-1">Minimum Stok</label> <input type="number" id="minStockLevel" min="0" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
-      </div>
-      <div class="flex items-end"><button type="submit" id="addButton" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors font-medium"> Yeni Ürün Ekle </button>
-      </div>
-     </form>
-     <div id="addMessage" class="mt-3 text-sm hidden"></div>
-    </div><!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-     <div class="bg-white rounded-lg shadow-md p-4">
-      <div class="text-gray-600 text-sm mb-1">
-       Toplam Ürün
-      </div>
-      <div id="totalProducts" class="text-3xl font-bold text-indigo-600">
-       0
-      </div>
-     </div>
-     <div class="bg-white rounded-lg shadow-md p-4">
-      <div class="text-gray-600 text-sm mb-1">
-       Düşük Stok
-      </div>
-      <div id="lowStockCount" class="text-3xl font-bold text-orange-600">
-       0
-      </div>
-     </div>
-    </div><!-- Products List -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-     <h2 class="text-xl font-semibold text-gray-800 mb-4">Ürün Listesi</h2>
-     <div id="productsContainer" class="space-y-3">
-      <div class="text-center text-gray-500 py-8">
-       Henüz ürün eklenmedi
-      </div>
-     </div>
+
     </div>
-   </div>
+
   </div>
-  <script>
-    let currentData = [];
-    let isLoading = false;
-    let currentUser = null;
 
-    const defaultConfig = {
-      page_title: "Ürün Stok Takip",
-      add_button_text: "Yeni Ürün Ekle",
-      login_title: "Stok Takip Sistemi",
-      background_color: "#EEF2FF",
-      surface_color: "#FFFFFF",
-      text_color: "#1F2937",
-      primary_action_color: "#4F46E5",
-      secondary_action_color: "#6B7280",
-      font_family: "system-ui",
-      font_size: 16
-    };
+  <!-- JS -->
+  <script src="js/auth.js"></script>
+  <script src="js/product.js"></script>
 
-    const dataHandler = {
-      onDataChanged(data) {
-        currentData = data;
-        if (currentUser) {
-          renderProducts(data);
-          updateStats(data);
-        }
-      }
-    };
-
-    async function onConfigChange(config) {
-      const pageTitle = document.getElementById('pageTitle');
-      const addButton = document.getElementById('addButton');
-      const loginTitle = document.getElementById('loginTitle');
-      const app = document.getElementById('app');
-      
-      pageTitle.textContent = config.page_title || defaultConfig.page_title;
-      addButton.textContent = config.add_button_text || defaultConfig.add_button_text;
-      loginTitle.textContent = config.login_title || defaultConfig.login_title;
-      
-      const bgColor = config.background_color || defaultConfig.background_color;
-      const surfaceColor = config.surface_color || defaultConfig.surface_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
-      const fontFamily = config.font_family || defaultConfig.font_family;
-      const fontSize = config.font_size || defaultConfig.font_size;
-      
-      app.style.background = `linear-gradient(to bottom right, ${bgColor}, ${adjustColorBrightness(bgColor, -10)})`;
-      
-      document.querySelectorAll('.bg-white').forEach(el => {
-        el.style.backgroundColor = surfaceColor;
-      });
-      
-      document.querySelectorAll('h1, h2, .text-gray-800').forEach(el => {
-        el.style.color = textColor;
-      });
-      
-      document.querySelectorAll('button[type="submit"]').forEach(el => {
-        el.style.backgroundColor = primaryColor;
-      });
-      
-      document.querySelectorAll('.edit-btn').forEach(el => {
-        el.style.color = secondaryColor;
-      });
-      
-      document.querySelectorAll('.delete-btn').forEach(el => {
-        el.style.color = secondaryColor;
-      });
-      
-      document.body.style.fontFamily = `${fontFamily}, system-ui, -apple-system, sans-serif`;
-      
-      pageTitle.style.fontSize = `${fontSize * 2}px`;
-      loginTitle.style.fontSize = `${fontSize * 1.875}px`;
-      document.querySelectorAll('h2').forEach(el => {
-        el.style.fontSize = `${fontSize * 1.25}px`;
-      });
-      document.querySelectorAll('p, label, input, button').forEach(el => {
-        el.style.fontSize = `${fontSize}px`;
-      });
-    }
-
-    function adjustColorBrightness(color, percent) {
-      const num = parseInt(color.replace("#",""), 16);
-      const amt = Math.round(2.55 * percent);
-      const R = (num >> 16) + amt;
-      const G = (num >> 8 & 0x00FF) + amt;
-      const B = (num & 0x0000FF) + amt;
-      return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + 
-        (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255))
-        .toString(16).slice(1);
-    }
-
-    function mapToCapabilities(config) {
-      return {
-        recolorables: [
-          {
-            get: () => config.background_color || defaultConfig.background_color,
-            set: (value) => {
-              if (window.elementSdk) {
-                window.elementSdk.config.background_color = value;
-                window.elementSdk.setConfig({ background_color: value });
-              }
-            }
-          },
-          {
-            get: () => config.surface_color || defaultConfig.surface_color,
-            set: (value) => {
-              if (window.elementSdk) {
-                window.elementSdk.config.surface_color = value;
-                window.elementSdk.setConfig({ surface_color: value });
-              }
-            }
-          },
-          {
-            get: () => config.text_color || defaultConfig.text_color,
-            set: (value) => {
-              if (window.elementSdk) {
-                window.elementSdk.config.text_color = value;
-                window.elementSdk.setConfig({ text_color: value });
-              }
-            }
-          },
-          {
-            get: () => config.primary_action_color || defaultConfig.primary_action_color,
-            set: (value) => {
-              if (window.elementSdk) {
-                window.elementSdk.config.primary_action_color = value;
-                window.elementSdk.setConfig({ primary_action_color: value });
-              }
-            }
-          },
-          {
-            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-            set: (value) => {
-              if (window.elementSdk) {
-                window.elementSdk.config.secondary_action_color = value;
-                window.elementSdk.setConfig({ secondary_action_color: value });
-              }
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => config.font_family || defaultConfig.font_family,
-          set: (value) => {
-            if (window.elementSdk) {
-              window.elementSdk.config.font_family = value;
-              window.elementSdk.setConfig({ font_family: value });
-            }
-          }
-        },
-        fontSizeable: {
-          get: () => config.font_size || defaultConfig.font_size,
-          set: (value) => {
-            if (window.elementSdk) {
-              window.elementSdk.config.font_size = value;
-              window.elementSdk.setConfig({ font_size: value });
-            }
-          }
-        }
-      };
-    }
-
-    function mapToEditPanelValues(config) {
-      return new Map([
-        ["page_title", config.page_title || defaultConfig.page_title],
-        ["add_button_text", config.add_button_text || defaultConfig.add_button_text],
-        ["login_title", config.login_title || defaultConfig.login_title]
-      ]);
-    }
-
-    // Login functionality
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      const employeeId = document.getElementById('employeeId').value.trim();
-      const firstName = document.getElementById('firstName').value.trim();
-      const lastName = document.getElementById('lastName').value.trim();
-      
-      if (employeeId && firstName && lastName) {
-        currentUser = {
-          id: employeeId,
-          firstName: firstName,
-          lastName: lastName
-        };
-        
-        document.getElementById('userName').textContent = `${firstName} ${lastName} (ID: ${employeeId})`;
-        document.getElementById('loginScreen').classList.add('hidden');
-        document.getElementById('mainApp').classList.remove('hidden');
-        
-        renderProducts(currentData);
-        updateStats(currentData);
-      }
-    });
-
-    window.logout = function() {
-      currentUser = null;
-      document.getElementById('loginScreen').classList.remove('hidden');
-      document.getElementById('mainApp').classList.add('hidden');
-      document.getElementById('loginForm').reset();
-    };
-
-    function renderProducts(products) {
-      const container = document.getElementById('productsContainer');
-      
-      if (products.length === 0) {
-        container.innerHTML = '<div class="text-center text-gray-500 py-8">Henüz ürün eklenmedi</div>';
-        return;
-      }
-
-      container.innerHTML = products.map(product => {
-        const isLowStock = product.stock_quantity <= product.min_stock_level;
-        
-        return `
-          <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow" data-id="${product.__backendId}">
-            <div class="flex justify-between items-start mb-3">
-              <div class="flex-1">
-                <h3 class="font-semibold text-lg text-gray-800">${product.product_name}</h3>
-                <p class="text-sm text-gray-600">${product.category}</p>
-              </div>
-              <div class="flex gap-2">
-                <button class="edit-btn text-gray-600 hover:text-indigo-600 px-3 py-1 rounded" onclick="editProduct('${product.__backendId}')">✏️ Düzenle</button>
-                <button class="delete-btn text-gray-600 hover:text-red-600 px-3 py-1 rounded" onclick="deleteProduct('${product.__backendId}')">    ️ Sil</button>
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span class="text-gray-600">Stok:</span>
-                <span class="font-semibold ml-1 ${isLowStock ? 'text-orange-600' : 'text-green-600'}">${product.stock_quantity}</span>
-                ${isLowStock ? '<span class="ml-1 text-orange-600">⚠️</span>' : ''}
-              </div>
-              <div>
-                <span class="text-gray-600">Min. Stok:</span>
-                <span class="font-semibold ml-1">${product.min_stock_level}</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function updateStats(products) {
-      const totalProducts = products.length;
-      const lowStockCount = products.filter(p => p.stock_quantity <= p.min_stock_level).length;
-
-      document.getElementById('totalProducts').textContent = totalProducts;
-      document.getElementById('lowStockCount').textContent = lowStockCount;
-    }
-
-    function showMessage(elementId, message, isError = false) {
-      const msgEl = document.getElementById(elementId);
-      msgEl.textContent = message;
-      msgEl.className = `mt-3 text-sm ${isError ? 'text-red-600' : 'text-green-600'}`;
-      msgEl.classList.remove('hidden');
-      setTimeout(() => msgEl.classList.add('hidden'), 3000);
-    }
-
-    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      if (isLoading) return;
-      
-      if (currentData.length >= 999) {
-        showMessage('addMessage', 'Maksimum 999 ürün sınırına ulaşıldı. Lütfen önce bazı ürünleri silin.', true);
-        return;
-      }
-
-      isLoading = true;
-      const submitBtn = document.getElementById('addButton');
-      const originalText = submitBtn.textContent;
-      submitBtn.textContent = 'Ekleniyor...';
-      submitBtn.disabled = true;
-
-      const newProduct = {
-        product_name: document.getElementById('productName').value.trim(),
-        category: document.getElementById('category').value.trim(),
-        stock_quantity: parseInt(document.getElementById('stockQuantity').value),
-        min_stock_level: parseInt(document.getElementById('minStockLevel').value),
-        added_date: new Date().toISOString()
-      };
-
-      const result = await window.dataSdk.create(newProduct);
-      
-      isLoading = false;
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
-
-      if (result.isOk) {
-        e.target.reset();
-        showMessage('addMessage', 'Ürün başarıyla eklendi!');
-      } else {
-        showMessage('addMessage', 'Ürün eklenirken hata oluştu. Lütfen tekrar deneyin.', true);
-      }
-    });
-
-    window.editProduct = function(id) {
-      const product = currentData.find(p => p.__backendId === id);
-      if (!product) return;
-
-      document.getElementById('productName').value = product.product_name;
-      document.getElementById('category').value = product.category;
-      document.getElementById('stockQuantity').value = product.stock_quantity;
-      document.getElementById('minStockLevel').value = product.min_stock_level;
-
-      const form = document.getElementById('addProductForm');
-      form.scrollIntoView({ behavior: 'smooth' });
-
-      const submitBtn = document.getElementById('addButton');
-      submitBtn.textContent = 'Güncelle';
-      
-      form.onsubmit = async (e) => {
-        e.preventDefault();
-        
-        if (isLoading) return;
-        
-        isLoading = true;
-        submitBtn.textContent = 'Güncelleniyor...';
-        submitBtn.disabled = true;
-
-        const updatedProduct = {
-          ...product,
-          product_name: document.getElementById('productName').value.trim(),
-          category: document.getElementById('category').value.trim(),
-          stock_quantity: parseInt(document.getElementById('stockQuantity').value),
-          min_stock_level: parseInt(document.getElementById('minStockLevel').value)
-        };
-
-        const result = await window.dataSdk.update(updatedProduct);
-        
-        isLoading = false;
-        submitBtn.disabled = false;
-
-        if (result.isOk) {
-          form.reset();
-          submitBtn.textContent = window.elementSdk?.config?.add_button_text || defaultConfig.add_button_text;
-          form.onsubmit = document.getElementById('addProductForm').onsubmit;
-          showMessage('addMessage', 'Ürün başarıyla güncellendi!');
-        } else {
-          submitBtn.textContent = 'Güncelle';
-          showMessage('addMessage', 'Ürün güncellenirken hata oluştu.', true);
-        }
-      };
-    };
-
-    window.deleteProduct = async function(id) {
-      const product = currentData.find(p => p.__backendId === id);
-      if (!product) return;
-
-      const productEl = document.querySelector(`[data-id="${id}"]`);
-      const deleteBtn = productEl.querySelector('.delete-btn');
-      const originalContent = deleteBtn.innerHTML;
-
-      deleteBtn.innerHTML = 'Emin misiniz?';
-      deleteBtn.style.color = '#DC2626';
-
-      const confirmDelete = async () => {
-        if (isLoading) return;
-        
-        isLoading = true;
-        deleteBtn.innerHTML = 'Siliniyor...';
-        deleteBtn.disabled = true;
-
-        const result = await window.dataSdk.delete(product);
-        
-        isLoading = false;
-
-        if (result.isOk) {
-          productEl.style.opacity = '0';
-          setTimeout(() => productEl.remove(), 300);
-        } else {
-          deleteBtn.innerHTML = originalContent;
-          deleteBtn.disabled = false;
-          const errorMsg = document.createElement('div');
-          errorMsg.textContent = 'Silme işlemi başarısız. Lütfen tekrar deneyin.';
-          errorMsg.className = 'text-red-600 text-sm mt-2';
-          productEl.appendChild(errorMsg);
-          setTimeout(() => errorMsg.remove(), 3000);
-        }
-
-        deleteBtn.onclick = null;
-      };
-
-      const cancelDelete = () => {
-        deleteBtn.innerHTML = originalContent;
-        deleteBtn.style.color = '';
-        deleteBtn.onclick = () => window.deleteProduct(id);
-      };
-
-      deleteBtn.onclick = confirmDelete;
-      setTimeout(cancelDelete, 3000);
-    };
-
-    async function init() {
-      if (window.elementSdk) {
-        window.elementSdk.init({
-          defaultConfig,
-          onConfigChange,
-          mapToCapabilities,
-          mapToEditPanelValues
-        });
-        
-        await onConfigChange(window.elementSdk.config);
-      }
-
-      if (window.dataSdk) {
-        const initResult = await window.dataSdk.init(dataHandler);
-        if (!initResult.isOk) {
-          console.error('Data SDK başlatılamadı');
-        }
-      }
-    }
-
-    init();
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b3b0f822175d5ef',t:'MTc2NjY5NDI1Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>

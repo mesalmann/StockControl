@@ -1,0 +1,183 @@
+/* ============================
+   GLOBAL RESET & BASE
+============================ */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(to bottom right, #eef2ff, #dbeafe);
+  color: #1f2937;
+}
+
+/* ============================
+   LAYOUT
+============================ */
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.hidden {
+  display: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ============================
+   LOGIN SCREEN
+============================ */
+
+#loginScreen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(to bottom right, #eef2ff, #dbeafe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+#loginScreen.hidden {
+  display: none !important;
+}
+
+
+.login-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.login-sub {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+/* ============================
+   INPUTS & BUTTONS
+============================ */
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99,102,241,0.2);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+button.primary {
+  background: #4f46e5;
+  color: white;
+}
+
+button.primary:hover {
+  background: #4338ca;
+}
+
+button.secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+/* ============================
+   MAIN APP
+============================ */
+
+#mainApp {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* ============================
+   PRODUCT LIST
+============================ */
+
+.product-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: 0.2s;
+}
+
+.product-card:hover {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.product-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.product-meta {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.low-stock {
+  color: #ea580c;
+  font-weight: 600;
+}
+
+.good-stock {
+  color: #16a34a;
+}
+
+/* ============================
+   UTILITY
+============================ */
+
+.mt-1 { margin-top: .25rem; }
+.mt-2 { margin-top: .5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+.text-red { color: #dc2626; }
+.text-green { color: #16a34a; }
+.text-gray { color: #6b7280; }
