@@ -1,14 +1,28 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Backend.API.Data;
+using Microsoft.EntityFrameworkCore;
 
-// Controller'ları ekle
+var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=stockcontrol.db"));
 
 var app = builder.Build();
 
-// HTTPS yönlendirme (istersen sonra açarız)
-app.UseHttpsRedirection();
-
-// 🔴 EN ÖNEMLİ SATIR
+app.UseCors("AllowAll");
+app.UseAuthorization();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();
